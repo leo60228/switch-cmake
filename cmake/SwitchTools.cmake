@@ -92,6 +92,7 @@ endmacro()
 ## No icon will be resolved, if a variable called `NO_ICON` is set to
 ## anything.
 macro(set_app_icon file)
+    set(NO_ICON OFF)
     if(EXISTS ${file})
         set(__HOMEBREW_ICON ${file})
     elseif(EXISTS ${PROJECT_SOURCE_DIR}/icon.jpg)
@@ -101,6 +102,7 @@ macro(set_app_icon file)
     else()
         # Purposefully don't set `__HOMEBREW_ICON` to anything.
         message(WARNING "Failed to resolve application icon")
+        set(NO_ICON ON)
     endif()
 endmacro()
 
@@ -261,7 +263,7 @@ function(add_nro_target target)
     set(NROFLAGS "")
 
     # Set icon for the NRO, if given.
-    if(__HOMEBREW_ICON)
+    if(NOT NO_ICON)
         string(APPEND ${NROFLAGS} "--icon=${__HOMEBREW_ICON}")
     endif()
 
