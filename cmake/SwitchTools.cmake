@@ -92,17 +92,15 @@ endmacro()
 ## No icon will be resolved, if a variable called `NO_ICON` is set to
 ## anything.
 macro(set_app_icon file)
-    if(NOT NO_ICON)
-        if(EXISTS ${file})
-            set(__HOMEBREW_ICON ${file})
-        elseif(EXISTS ${PROJECT_SOURCE_DIR}/icon.jpg)
-            set(__HOMEBREW_ICON ${PROJECT_SOURCE_DIR}/icon.jpg)
-        elseif(LIBNX)
-            set(__HOMEBREW_ICON ${LIBNX}/default_icon.jpg)
-        else()
-            # Purposefully don't set `__HOMEBREW_ICON` to anything.
-            message(WARNING "Failed to resolve application icon")
-        endif()
+    if(EXISTS ${file})
+        set(__HOMEBREW_ICON ${file})
+    elseif(EXISTS ${PROJECT_SOURCE_DIR}/icon.jpg)
+        set(__HOMEBREW_ICON ${PROJECT_SOURCE_DIR}/icon.jpg)
+    elseif(LIBNX)
+        set(__HOMEBREW_ICON ${LIBNX}/default_icon.jpg)
+    else()
+        # Purposefully don't set `__HOMEBREW_ICON` to anything.
+        message(WARNING "Failed to resolve application icon")
     endif()
 endmacro()
 
@@ -266,6 +264,8 @@ function(add_nro_target target)
     if(__HOMEBREW_ICON)
         string(APPEND ${NROFLAGS} "--icon=${__HOMEBREW_ICON}")
     endif()
+
+    message(STATUS "Icon: \"${NROFLAGS}\"")
 
     # Add RomFS to the NRO, if given.
     if(NOT "${romfs}" STREQUAL "romfs-NOTFOUND")
